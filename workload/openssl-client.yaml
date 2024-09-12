@@ -7,7 +7,7 @@ spec:
   containers:
   - name: openssl-client
     image: finalgene/openssh
-    command: ["sh"]
-    args: ["-c", "sleep infinity"]
     #command: ["sh"]
-    #args: ["-c", "openssl s_client -connect openssl-svc:3000 -CAfile /tmp/bundle.0.pem -cert /tmp/svid.0.pem -key /tmp/svid.0.key -state"]
+    #args: ["-c", "sleep infinity"]
+    command: ["sh"]
+    args: ["-c", "while true; do [ -f /tmp/svid.0.pem ] && openssl s_client -connect openssl-svc:3000 -CAfile /tmp/bundle.0.pem -cert /tmp/svid.0.pem -key /tmp/svid.0.key -state && break; sleep 1; done"]
