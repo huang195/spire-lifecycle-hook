@@ -24,4 +24,4 @@ spec:
     #command: ["sh"]
     #args: ["-c", "sleep infinity"]
     command: ["sh"]
-    args: ["-c", "while true; do [ -f /tmp/svid.0.pem ] && openssl s_server -accept 3000 -CAfile /tmp/bundle.0.pem -cert /tmp/svid.0.pem -key /tmp/svid.0.key -state -www && break; sleep 1; done"]
+    args: ["-c", "while true; do [ -f /var/run/secrets/spire/svid.0.pem ] && openssl s_server -accept 3000 -CAfile /var/run/secrets/spire/bundle.0.pem -cert /var/run/secrets/spire/svid.0.pem -key /var/run/secrets/spire/svid.0.key -state -www && break; sleep 1; done"]

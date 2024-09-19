@@ -62,9 +62,11 @@ while true; do
         fi
       done
       )
-      cat /tmp/bundle.0.pem | nsenter -t $CONTAINER_PID --mount sh -c "cat > /tmp/bundle.0.pem"
-      cat /tmp/svid.0.key | nsenter -t $CONTAINER_PID --mount sh -c "cat > /tmp/svid.0.key"
-      cat /tmp/svid.0.pem | nsenter -t $CONTAINER_PID --mount sh -c "cat > /tmp/svid.0.pem"
+
+      nsenter -t $CONTAINER_PID --mount sh -c "mkdir -p /var/run/secrets/spire/"
+      cat /tmp/bundle.0.pem | nsenter -t $CONTAINER_PID --mount sh -c "cat > /var/run/secrets/spire/bundle.0.pem"
+      cat /tmp/svid.0.key | nsenter -t $CONTAINER_PID --mount sh -c "cat > /var/run/secrets/spire/svid.0.key"
+      cat /tmp/svid.0.pem | nsenter -t $CONTAINER_PID --mount sh -c "cat > /var/run/secrets/spire/svid.0.pem"
     else
       echo "Expected a process id, but got: $line"
     fi
