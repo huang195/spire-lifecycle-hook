@@ -47,11 +47,21 @@ while true; do
       echo "CONTAINER_PID: $CONTAINER_PID"
       
       (
-      enterCgroup $BASHPID $CONTAINER_PID; \
-      /root/spire-1.10.3/bin/spire-agent api fetch -socketPath /var/run/spire/sockets/agent.sock -write /tmp; \
-      enterCgroup $BASHPID $$; \
+      #this loops is to handle the time the SPIRE controller manager takes to register the workload
+      while true; do
+        enterCgroup $BASHPID $CONTAINER_PID; \
+        /root/spire-1.10.3/bin/spire-agent api fetch -socketPath /var/run/spire//agent-sockets/spire-agent.sock -write /tmp; \
+        ret=$?
+        if [ $ret -eq 0 ]; then
+          enterCgroup $BASHPID $$
+          break
+        else
+          enterCgroup $BASHPID $$; \
+          echo "cannot fetch SPIRE identities. wait 1s..."
+          sleep 1
+        fi
+      done
       )
-
       cat /tmp/bundle.0.pem | nsenter -t $CONTAINER_PID --mount sh -c "cat > /tmp/bundle.0.pem"
       cat /tmp/svid.0.key | nsenter -t $CONTAINER_PID --mount sh -c "cat > /tmp/svid.0.key"
       cat /tmp/svid.0.pem | nsenter -t $CONTAINER_PID --mount sh -c "cat > /tmp/svid.0.pem"
