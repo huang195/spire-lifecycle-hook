@@ -7,8 +7,8 @@ global:
       create: true
     ingressControllerType: "" # If not openshift, and want to expose services, set to a supported option [ingress-nginx]
     # Update these
-    clusterName: example
-    trustDomain: example.org
+    clusterName: spire-lifecycle-hook
+    trustDomain: spire-lifecycle-hook.ibm.com
     caSubject:
       country: US
       organization: Red Hat
