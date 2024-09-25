@@ -1,0 +1,10 @@
+apiVersion: spire.spiffe.io/v1alpha1
+kind: ClusterStaticEntry
+metadata:
+  name: static-default-entry
+spec:
+  spiffeID: "spiffe://spire-lifecycle-hook.ibm.com/ns/default/sa/default"
+  parentID: "spiffe://spire-lifecycle-hook.ibm.com/spire/agent/k8s_psat/spire-lifecycle-hook/226f3559-ffc0-45fb-bc5c-23d8e82c2a04"
+  selectors: 
+  - k8s:ns:default
+  - k8s:sa:default
