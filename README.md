@@ -47,7 +47,6 @@ Now cp the script to the worker node:
 
 ```
 podman cp postStart.sh 3ae:/usr/local/bin/postStart.sh
-podman cp postStart_daemon.sh 3ae:/usr/local/bin/postStart_daemon.sh
 ```
 
 For changes to take into effect, we need to restart containerd.
@@ -61,15 +60,6 @@ Check if containerd is successfully restarted:
 ```
 systemctl status containerd
 ```
-
-In a shell on the worker node, start `postStart_daemon.sh` in the background.
-
-```
-/usr/local/bin/postStart_daemon.sh &
-```
-
-In the future, this could be replaced with a daemonset, so it doesn't have to
-be done manually on each worker node.
 
 Now we are ready to test this out. Start the openssl server and client:
 
@@ -87,30 +77,19 @@ openssl-client   1/1     Running   0          64s
 openssl-server   1/1     Running   0          86s
 ```
 
-On both pods, our script should have placed SPIRE identity files to their `/tmp` directory. You should see something like:
+On both pods, our script should have placed SPIRE identity files to their `/var/run/secrets/spire` directory. You should see something like:
 
 ```
-$ kubectl exec openssl-client -- ls /tmp
+$ kubectl exec openssl-client -- ls /var/run/secrets/spire
 bundle.0.pem
 svid.0.key
 svid.0.pem
 ```
 
-From 2 terminals, have a shell opened for both the openssl-client and openssl-server pods. On the openssl-server pod, run:
+If everything worked, you can run `kubectl logs openssl-client` and see some messages about the client successfully
+making an mTLS connection with the server.
 
-```
-$ openssl s_server -accept 3000 -CAfile /tmp/bundle.0.pem -cert /tmp/svid.0.pem -key /tmp/svid.0.key -state -www
-```
-
-Then on the openssl-client pod, run:
-
-```
-openssl s_client -connect openssl-svc:3000 -CAfile /tmp/bundle.0.pem -cert /tmp/svid.0.pem -key /tmp/svid.0.key -state
-```
-
-You should see the openssl client and server are able to establish mTLS connection using the injected SPIRE certificates.
-
-To cleanup:
+## Cleanup
 
 ```
 kubectl delete -f workload/openssl-client.yaml -f workload/openssl-server.yaml --force
