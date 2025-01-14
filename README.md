@@ -21,7 +21,7 @@ After the cluster is started, we need to modify the container runtime so our
 script runs when pods are starting. Every container runtime is slightly
 different in how this is configured. In Kind/Podman, where the container
 runtime is `containerd`, its configuration is located at
-`/etc/containers/cri-base.json`. Get a shell on its worker node:
+`/etc/containerd/cri-base.json`. Get a shell on its worker node:
 
 ```
 podman exec -it 3ae bash
