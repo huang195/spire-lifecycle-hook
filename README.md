@@ -15,7 +15,7 @@ Start a Kubernetes cluster using Kind:
 kind create cluster
 ```
 
-Install SPIRE using the instructions (here)[./spire/README.md].
+Install SPIRE using the instructions [here](./spire/README.md).
 
 After the cluster is started, we need to modify the container runtime so our
 script runs when pods are starting. Every container runtime is slightly
